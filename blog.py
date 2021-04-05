@@ -24,6 +24,11 @@ dict_queries['measures'] = "CREATE TABLE measures(" \
            "measure_id INTEGER PRIMARY KEY AUTOINCREMENT," \
            "measure_name TEXT UNIQUE);"
 
+dict_queries['recipes'] = "CREATE TABLE recipes(" \
+                          "recipe_id INTEGER PRIMARY KEY AUTOINCREMENT," \
+                          "recipe_name TEXT NOT NULL," \
+                          "recipe_description TEXT)"
+
 for key, value in dict_queries.items():
     cur.execute(dict_queries[key])
 
@@ -31,8 +36,16 @@ for key_data, value_data in data.items():
     for values in value_data:
         cur.execute(f"INSERT INTO {key_data} VALUES (?, ?);", (None, values))
 
+conn.commit()
+print("Pass the empty recipe name to exit.")
+
+while True:
+    rec_name = input("Recipe name: ")
+    if rec_name == "":
+        break
+    rec_desc = input("Recipe description: ")
+    cur.execute(f"INSERT INTO recipes VALUES (?, ?, ?);", (None, rec_name, rec_desc))
 
 conn.commit()
-
 conn.close()
 
